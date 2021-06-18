@@ -62,29 +62,30 @@ try conn.query("UPDATE ?? SET age = ? WHERE age is NULL;", [tableName, defaultAg
 # Requirements
 
 * Swift 5.0 or later
-* MariaDB or MySQL Connector/C (libmysqlclient) 2.2.3 or later
+* MySQL Connector/C (libmysqlclient) 2.2.3 or later
 
 ## macOS
 
-Install pkg-config `.pc` file in [cmysql](https://github.com/vapor-community/cmysql) or [cmysql-mariadb](https://github.com/novi/cmysql-mariadb/tree/mariadb).
+Install libmysqlclient and copy pkg-config `.pc` file to /usr/local/lib/pkgconfig/
 
 ```sh
-# cmysql
-$ brew tap novi/tap
-$ brew install novi/tap/cmysql
-
-# cmysql-mariadb
-$ brew tap novi/tap
-$ brew install novi/tap/cmysqlmariadb
+$ brew install mysql-connector-c
+# copy  mysqlclient.pc
+$ cp /usr/local/opt/mysql-client/lib/pkgconfig/mysqlclient.pc /usr/local/lib/pkgconfig/
+#  modify includedir
+$ sudo vi  /usr/local/lib/pkgconfig/mysqlclient.pc , then change 
+includedir=${prefix}/include/mysql
+ to 
+includedir=${prefix}/include
+ 
 ```
 
 ## Ubuntu
 
-* Install `libmariadbclient`
-* Follow [Setting up MariaDB Repositories](https://downloads.mariadb.org/mariadb/repositories/#mirror=yamagata-university) and set up your repository.
+* Install `libmysqlclient-dev`
 
 ```sh
-$ sudo apt-get install libmariadbclient-dev
+$ sudo apt-get install libmysqlclient-dev
 ```
 
 # Installation
