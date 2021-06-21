@@ -354,7 +354,7 @@ extension Connection {
         return try self.queryJsonObjects_(query: queryString, option: option)
     }
     
-    public func queryJsonObjectsWithStatus(_ query: String, _ params: [QueryParameter], option: QueryParameterOption) throws -> ([[String : Any?]], QueryStatus) {
+    public func queryJsonObjectsWithStatusWithOption(_ query: String, _ params: [QueryParameter], option: QueryParameterOption) throws -> ([[String : Any?]], QueryStatus) {
         let queryString = try QueryFormatter.format(query: query, parameters: type(of: self).buildParameters(params, option: option))
         return try self.queryJsonObjects_(query: queryString, option: option)
     }
@@ -365,7 +365,7 @@ extension Connection {
     }
     
     public func queryJsonObjectsWithOption(query: String, params: [QueryParameter], option: QueryParameterOption) throws -> [[String : Any?]] {
-        let (rows, _) = try self.queryJsonObjectsWithStatus(query, params, option: option)
+        let (rows, _) = try self.queryJsonObjectsWithStatusWithOption(query, params, option: option)
         return rows
     }
 }
