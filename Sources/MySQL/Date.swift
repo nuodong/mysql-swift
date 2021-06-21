@@ -43,31 +43,13 @@ extension Date {
     
     internal init(sqlDate: String, timeZone: TimeZone) throws {
         
-        switch sqlDate.count {
-        case 19:
-            let chars: [Character] = Array(sqlDate)
-            if let year = Int(String(chars[0...3])),
-                let month = Int(String(chars[5...6])),
-                let day = Int(String(chars[8...9])),
-                let hour = Int(String(chars[11...12])),
-                let minute = Int(String(chars[14...15])),
-                let second = Int(String(chars[17...18])), year > 0 && day > 0 && month > 0 {
-                var comps = DateComponents()
-                comps.year = year
-                comps.month = month
-                comps.day = day
-                comps.hour = hour
-                comps.minute = minute
-                comps.second = second
-                let parsedDate: Date? = SQLDateCalendar.calendar(forTimezone: timeZone) { calendar in
-                    calendar.date(from :comps)
-                }
-                if let date = parsedDate {
-                    self = date
-                    return
-                }
-            }
-        default: break
+        let comps = try DateComponents.fromSQLValue(string: sqlDate)
+        let parsedDate: Date? = SQLDateCalendar.calendar(forTimezone: timeZone) { calendar in
+            calendar.date(from :comps)
+        }
+        if let date = parsedDate {
+            self = date
+            return
         }
         
         throw QueryError.SQLDateStringError(sqlDate)
