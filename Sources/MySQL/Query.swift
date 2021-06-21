@@ -364,7 +364,7 @@ extension Connection {
         return rows
     }
     
-    public func queryJsonObjects(query: String, params: [QueryParameter], option: QueryParameterOption) throws -> [[String : Any?]] {
+    public func queryJsonObjectsWithOption(query: String, params: [QueryParameter], option: QueryParameterOption) throws -> [[String : Any?]] {
         let (rows, _) = try self.queryJsonObjectsWithStatus(query, params, option: option)
         return rows
     }
