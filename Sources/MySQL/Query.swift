@@ -359,12 +359,12 @@ extension Connection {
         return try self.queryJsonObjects_(query: queryString, option: option)
     }
     
-    public func queryJsonObjects(_ query: String, _ params: [QueryParameter]) throws -> [[String : Any?]] {
+    public func queryJsonObjects(query: String, params: [QueryParameter]) throws -> [[String : Any?]] {
         let (rows, _) = try self.queryJsonObjectsWithStatus(query, params)
         return rows
     }
     
-    public func queryJsonObjects(_ query: String, _ params: [QueryParameter], option: QueryParameterOption) throws -> [[String : Any?]] {
+    public func queryJsonObjects(query: String, params: [QueryParameter], option: QueryParameterOption) throws -> [[String : Any?]] {
         let (rows, _) = try self.queryJsonObjectsWithStatus(query, params, option: option)
         return rows
     }
