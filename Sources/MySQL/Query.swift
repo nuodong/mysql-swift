@@ -346,7 +346,7 @@ extension Connection {
 
 extension Connection {
     
-    public func queryJsonObjects(_ query: String, _ params: [QueryParameter]) throws -> ([[String : Any?]], QueryStatus) {
+    public func queryJsonObjectsWithStatus(_ query: String, _ params: [QueryParameter]) throws -> ([[String : Any?]], QueryStatus) {
         let option = QueryParameterDefaultOption(
             timeZone: self.option.timeZone
         )
@@ -354,18 +354,18 @@ extension Connection {
         return try self.queryJsonObjects_(query: queryString, option: option)
     }
     
-    public func queryJsonObjects(_ query: String, _ params: [QueryParameter], option: QueryParameterOption) throws -> ([[String : Any?]], QueryStatus) {
+    public func queryJsonObjectsWithStatus(_ query: String, _ params: [QueryParameter], option: QueryParameterOption) throws -> ([[String : Any?]], QueryStatus) {
         let queryString = try QueryFormatter.format(query: query, parameters: type(of: self).buildParameters(params, option: option))
         return try self.queryJsonObjects_(query: queryString, option: option)
     }
     
     public func queryJsonObjects(_ query: String, _ params: [QueryParameter]) throws -> [[String : Any?]] {
-        let (rows, _) = try self.queryJsonObjects(query, params)
+        let (rows, _) = try self.queryJsonObjectsWithStatus(query, params)
         return rows
     }
     
     public func queryJsonObjects(_ query: String, _ params: [QueryParameter], option: QueryParameterOption) throws -> [[String : Any?]] {
-        let (rows, _) = try self.queryJsonObjects(query, params, option: option)
+        let (rows, _) = try self.queryJsonObjectsWithStatus(query, params, option: option)
         return rows
     }
 }
