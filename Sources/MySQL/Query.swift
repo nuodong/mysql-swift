@@ -99,7 +99,6 @@ extension Connection {
     
     fileprivate func query<T: Decodable>(query formattedQuery: String, option: QueryParameterOption) throws -> ([T], QueryStatus) {
         let (rows, status) = try self.query(query: formattedQuery, option: option)
-        
         return try (rows.map({ try T(from: QueryRowResultDecoder(row: $0))}), status)
     }
     
@@ -179,10 +178,123 @@ extension Connection {
             if fields.count != fieldValues.count {
                 throw QueryError.resultParseError(message: "invalid fetched column count", result: "")
             }
+            
             rows.append(QueryRowResult(fields: fields, fieldValues: fieldValues))
         }
         
         return (rows, status)
+    }
+    
+    ///查询[[String : Any?]]类型结果
+    fileprivate func queryJsonObjects(query formattedQuery: String, option: QueryParameterOption) throws -> ([[String : Any?]], QueryStatus) {
+        let mysql = try connectIfNeeded()
+        
+        func queryPrefix() -> String {
+            if self.option.omitDetailsOnError {
+                return ""
+            }
+            return formattedQuery.subString(max: 1000)
+        }
+        
+        guard mysql_real_query(mysql, formattedQuery, UInt(formattedQuery.utf8.count)) == 0 else {
+            throw QueryError.queryExecutionError(message: MySQLUtil.getMySQLError(mysql), query: queryPrefix())
+        }
+        let status = QueryStatus(mysql: mysql)
+        
+        let res = mysql_use_result(mysql)
+        guard res != nil else {
+            if mysql_field_count(mysql) == 0 {
+                // actual no result
+                return ([], status)
+            }
+            throw QueryError.resultFetchError(message: MySQLUtil.getMySQLError(mysql), query: queryPrefix())
+        }
+        defer {
+            mysql_free_result(res)
+        }
+        
+        let fieldCount = Int(mysql_num_fields(res))
+        guard fieldCount > 0 else {
+            throw QueryError.resultNoFieldError(query: queryPrefix())
+        }
+        
+        // fetch field info
+        guard let fieldDef = mysql_fetch_fields(res) else {
+            throw QueryError.resultFieldFetchError(query: queryPrefix())
+        }
+        var fields:[Field] = []
+        for i in 0..<fieldCount {
+            guard let f = Field(f: fieldDef[i]) else {
+                throw QueryError.resultFieldFetchError(query: queryPrefix())
+            }
+            fields.append(f)
+        }
+        
+        // fetch rows
+        var rows: [[String : Any?]] = []
+        while true {
+            guard let row = mysql_fetch_row(res) else {
+                break // end of rows
+            }
+            
+            guard let _ = mysql_fetch_lengths(res) else {
+                throw QueryError.resultRowFetchError(query: queryPrefix())
+            }
+            let rowDic = try convertRowValueToDic(row: row, fields: fields, fieldCount: fieldCount)
+            if fields.count != rowDic.count {
+                throw QueryError.resultParseError(message: "invalid fetched column count", result: "")
+            }
+            rows.append(rowDic)
+        }
+        
+        return (rows, status)
+    }
+    
+    ///将数据库原始查询结果转换成[String : Any?]类型的结果
+    private func convertRowValueToDic(row: MYSQL_ROW, fields: [Field], fieldCount: Int )throws ->[String : Any?]{
+        var results: [String : Any?] = [ : ]
+        for i in 0..<fieldCount {
+            let field = fields[i]
+            if let valf = row[i], row[i] != nil {
+                let string = String(cString: valf)
+                
+                switch field.type {
+                case MYSQL_TYPE_DECIMAL:
+                    results[field.name] = try Decimal.fromSQLValue(string: string)
+                case MYSQL_TYPE_TINY:
+                    results[field.name] = (try Int.fromSQLValue(string: string)) == 1 ? true : false
+                case MYSQL_TYPE_SHORT:
+                    results[field.name] = try Int.fromSQLValue(string: string)
+                case MYSQL_TYPE_LONG:
+                    results[field.name] = try Int.fromSQLValue(string: string)
+                case MYSQL_TYPE_FLOAT:
+                    results[field.name] = try Float.fromSQLValue(string: string)
+                case MYSQL_TYPE_DOUBLE:
+                    results[field.name] = try Double.fromSQLValue(string: string)
+                case MYSQL_TYPE_NULL:
+                    results[field.name] = nil
+                case MYSQL_TYPE_DATE, MYSQL_TYPE_DATETIME, MYSQL_TYPE_TIME, MYSQL_TYPE_TIMESTAMP:
+                    results[field.name] = try Date(sqlDate: string, timeZone: option.timeZone)
+                case MYSQL_TYPE_LONGLONG:
+                    results[field.name] = try Int64.fromSQLValue(string: string)
+                case MYSQL_TYPE_INT24:
+                    results[field.name] = try Int.fromSQLValue(string: string)
+                case MYSQL_TYPE_VARCHAR, MYSQL_TYPE_STRING:
+                    results[field.name] = string
+                case MYSQL_TYPE_JSON:
+                    if let data = string.data(using: .utf8) {
+                        let jsonObj = try JSONSerialization.jsonObject(with: data, options: .mutableContainers)
+                        results[field.name] = jsonObj
+                    }else{
+                        results[field.name] = nil
+                    }
+                default:
+                    throw QueryError.resultParseError(message: "Unsupported mysql type:\(field.type) field:\(field.name)", result: "")
+                }
+            }
+            
+        }
+        return results
     }
 }
 
@@ -228,5 +340,32 @@ extension Connection {
     public func query(_ query: String, _ params: [QueryParameter] = [], option: QueryParameterOption) throws -> QueryStatus {
         let (_, status) = try self.query(query, params, option: option) as ([EmptyRowResult], QueryStatus)
         return status
+    }
+}
+
+
+extension Connection {
+    
+    public func queryJsonObjects(_ query: String, _ params: [QueryParameter] = []) throws -> ([[String : Any?]], QueryStatus) {
+        let option = QueryParameterDefaultOption(
+            timeZone: self.option.timeZone
+        )
+        let queryString = try QueryFormatter.format(query: query, parameters: type(of: self).buildParameters(params, option: option))
+        return try self.queryJsonObjects(query: queryString, option: option)
+    }
+    
+    public func queryJsonObjects(_ query: String, _ params: [QueryParameter] = [], option: QueryParameterOption) throws -> ([[String : Any?]], QueryStatus) {
+        let queryString = try QueryFormatter.format(query: query, parameters: type(of: self).buildParameters(params, option: option))
+        return try self.queryJsonObjects(query: queryString, option: option)
+    }
+    
+    public func queryJsonObjects(_ query: String, _ params: [QueryParameter] = []) throws -> [[String : Any?]] {
+        let (rows, _) = try self.queryJsonObjects(query, params) as ([[String : Any?]], QueryStatus)
+        return rows
+    }
+    
+    public func queryJsonObjects(_ query: String, _ params: [QueryParameter] = [], option: QueryParameterOption) throws -> [[String : Any?]] {
+        let (rows, _) = try self.queryJsonObjects(query, params, option: option) as ([[String : Any?]], QueryStatus)
+        return rows
     }
 }
