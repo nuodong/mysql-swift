@@ -186,7 +186,7 @@ extension Connection {
     }
     
     ///查询[[String : Any?]]类型结果
-    fileprivate func queryJsonObjects(query formattedQuery: String, option: QueryParameterOption) throws -> ([[String : Any?]], QueryStatus) {
+    fileprivate func queryJsonObjects_(query formattedQuery: String, option: QueryParameterOption) throws -> ([[String : Any?]], QueryStatus) {
         let mysql = try connectIfNeeded()
         
         func queryPrefix() -> String {
@@ -346,26 +346,26 @@ extension Connection {
 
 extension Connection {
     
-    public func queryJsonObjects(_ query: String, _ params: [QueryParameter] = []) throws -> ([[String : Any?]], QueryStatus) {
+    public func queryJsonObjects(_ query: String, _ params: [QueryParameter]) throws -> ([[String : Any?]], QueryStatus) {
         let option = QueryParameterDefaultOption(
             timeZone: self.option.timeZone
         )
         let queryString = try QueryFormatter.format(query: query, parameters: type(of: self).buildParameters(params, option: option))
-        return try self.queryJsonObjects(query: queryString, option: option)
+        return try self.queryJsonObjects_(query: queryString, option: option)
     }
     
-    public func queryJsonObjects(_ query: String, _ params: [QueryParameter] = [], option: QueryParameterOption) throws -> ([[String : Any?]], QueryStatus) {
+    public func queryJsonObjects(_ query: String, _ params: [QueryParameter], option: QueryParameterOption) throws -> ([[String : Any?]], QueryStatus) {
         let queryString = try QueryFormatter.format(query: query, parameters: type(of: self).buildParameters(params, option: option))
-        return try self.queryJsonObjects(query: queryString, option: option)
+        return try self.queryJsonObjects_(query: queryString, option: option)
     }
     
-    public func queryJsonObjects(_ query: String, _ params: [QueryParameter] = []) throws -> [[String : Any?]] {
-        let (rows, _) = try self.queryJsonObjects(query, params) as ([[String : Any?]], QueryStatus)
+    public func queryJsonObjects(_ query: String, _ params: [QueryParameter]) throws -> [[String : Any?]] {
+        let (rows, _) = try self.queryJsonObjects(query, params)
         return rows
     }
     
-    public func queryJsonObjects(_ query: String, _ params: [QueryParameter] = [], option: QueryParameterOption) throws -> [[String : Any?]] {
-        let (rows, _) = try self.queryJsonObjects(query, params, option: option) as ([[String : Any?]], QueryStatus)
+    public func queryJsonObjects(_ query: String, _ params: [QueryParameter], option: QueryParameterOption) throws -> [[String : Any?]] {
+        let (rows, _) = try self.queryJsonObjects(query, params, option: option)
         return rows
     }
 }
