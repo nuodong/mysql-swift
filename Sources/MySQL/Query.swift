@@ -280,7 +280,7 @@ extension Connection {
                     results[field.name] = try Int64.fromSQLValue(string: string)
                 case MYSQL_TYPE_INT24:
                     results[field.name] = try Int.fromSQLValue(string: string)
-                case MYSQL_TYPE_VAR_STRING, MYSQL_TYPE_STRING:
+                case MYSQL_TYPE_VAR_STRING, MYSQL_TYPE_STRING, MYSQL_TYPE_BLOB, MYSQL_TYPE_TINY_BLOB, MYSQL_TYPE_LONG_BLOB, MYSQL_TYPE_MEDIUM_BLOB:
                     results[field.name] = string
                 case MYSQL_TYPE_JSON:
                     if let data = string.data(using: .utf8) {
