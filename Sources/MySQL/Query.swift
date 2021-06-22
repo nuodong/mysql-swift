@@ -280,14 +280,14 @@ extension Connection {
                     results[field.name] = try Int64.fromSQLValue(string: string)
                 case MYSQL_TYPE_INT24:
                     results[field.name] = try Int.fromSQLValue(string: string)
-                case MYSQL_TYPE_VARCHAR, MYSQL_TYPE_STRING:
+                case MYSQL_TYPE_VAR_STRING, MYSQL_TYPE_STRING:
                     results[field.name] = string
                 case MYSQL_TYPE_JSON:
                     if let data = string.data(using: .utf8) {
                         let jsonObj = try JSONSerialization.jsonObject(with: data, options: .mutableContainers)
                         results[field.name] = jsonObj
                     }else{
-                        results[field.name] = nil
+                        throw QueryError.resultParseError(message: "Unsupported mysql type:\(field.type) field:\(field.name)", result: "")
                     }
                 default:
                     throw QueryError.resultParseError(message: "Unsupported mysql type:\(field.type) field:\(field.name)", result: "")
