@@ -22,14 +22,20 @@ let package = Package(
                 "SQLFormatter",
             ]
         ),
+//        .testTarget(
+//            name: "MySQLTests",
+//            dependencies: [
+//                "MySQL"
+//            ]
+//        ),
+//        .testTarget(
+//            name: "SQLFormatterTests",
+//            dependencies: [
+//                "MySQL"
+//            ]
+//        ),
         .testTarget(
-            name: "MySQLTests",
-            dependencies: [
-                "MySQL"
-            ]
-        ),
-        .testTarget(
-            name: "SQLFormatterTests",
+            name: "LoadTest",
             dependencies: [
                 "MySQL"
             ]

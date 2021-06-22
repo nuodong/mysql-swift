@@ -233,6 +233,7 @@ extension Connection {
         // fetch rows
         var rows: [[String : Any?]] = []
         while true {
+            
             guard let row = mysql_fetch_row(res) else {
                 break // end of rows
             }
@@ -246,7 +247,7 @@ extension Connection {
             }
             rows.append(rowDic)
         }
-        
+
         return (rows, status)
     }
     
