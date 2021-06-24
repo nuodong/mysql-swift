@@ -169,7 +169,7 @@ fileprivate struct SQLStringDecoder: Decoder {
     }
 
     func container<Key>(keyedBy type: Key.Type) throws -> KeyedDecodingContainer<Key> where Key : CodingKey {
-        throw QueryError.resultDecodeErrorMessage(message: "RawTypeDecoder container(keyedBy:) not implemented, you could implement `QueryRowResultCustomData` ")
+        throw QueryError.resultDecodeErrorMessage(message: "RawTypeDecoder container(keyedBy:) not implemented, you could implement `QueryRowResultCustomData` type:\(type)")
     }
     
     func unkeyedContainer() throws -> UnkeyedDecodingContainer {
