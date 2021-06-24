@@ -104,17 +104,17 @@ extension Optional: QueryParameter where Wrapped: QueryParameter {
     }
 }
 
-internal struct EscapedQueryParameter: QueryParameterType {
-    private let value: String
-    private let idParameter: String?
-    init(_ val: String, idParameter: String? = nil) {
+public struct EscapedQueryParameter: QueryParameterType {
+    public let value: String
+    public let idParameter: String?
+    public init(_ val: String, idParameter: String? = nil) {
         self.value = val
         self.idParameter = idParameter
     }
-    func escaped() -> String {
+    public func escaped() -> String {
         return value
     }
-    func escapedForID() -> String? {
+    public func escapedForID() -> String? {
         return idParameter
     }
 }
