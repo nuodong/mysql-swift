@@ -31,7 +31,7 @@ class LoadTests: XCTestCase {
         print("countRows:\(countRows)")
     }
     
-    final class NUDevice: Codable, MySQLJsonModel {
+    final class NUDevice: Codable {
         
         var id: Int?
         var udid: String
@@ -44,7 +44,7 @@ class LoadTests: XCTestCase {
         
 
     }
-    class DeviceInfoRequestModel: MySQLJsonModel, Codable, QueryParameter{
+    class DeviceInfoRequestModel:  Codable, QueryParameter{
         
         var sys_os: String?
         var sys_UDID: String?
