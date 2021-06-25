@@ -277,6 +277,10 @@ fileprivate struct RowKeyedDecodingContainer<K : CodingKey> : KeyedDecodingConta
         guard let columnValue = decoder.row.columnMap[key.stringValue] else {
             throw DecodingError.keyNotFound(key, DecodingError.Context(codingPath: [key], debugDescription: ""))
         }
+        if let data = (try columnValue.string()).data(using: .utf8){
+            let model = try JSONDecoder().decode(T.self, from: data)
+            return model
+        }
         let d = SQLStringDecoder(sqlString: try columnValue.string())
         return try T(from: d)
     }
