@@ -111,7 +111,7 @@ extension Connection {
             }
             return formattedQuery.subString(max: 1000)
         }
-        
+        print("MySQL formattedQuery:\(formattedQuery)")
         guard mysql_real_query(mysql, formattedQuery, UInt(formattedQuery.utf8.count)) == 0 else {
             throw QueryError.queryExecutionError(message: MySQLUtil.getMySQLError(mysql), query: queryPrefix())
         }
