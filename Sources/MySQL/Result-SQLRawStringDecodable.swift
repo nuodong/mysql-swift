@@ -11,7 +11,7 @@ import Foundation
 extension Int: SQLRawStringDecodable {
     static func fromSQLValue(string: String) throws -> Int {
         guard let val = Int(string) else {
-            throw QueryError.resultDecodeError(rawSQLValue: string, forType: self)
+            throw MySQLQueryError.resultDecodeError(rawSQLValue: string, forType: self)
         }
         return val
     }
@@ -20,7 +20,7 @@ extension Int: SQLRawStringDecodable {
 extension UInt: SQLRawStringDecodable {
     static func fromSQLValue(string: String) throws -> UInt {
         guard let val = UInt(string) else {
-            throw QueryError.resultDecodeError(rawSQLValue: string, forType: self)
+            throw MySQLQueryError.resultDecodeError(rawSQLValue: string, forType: self)
         }
         return val
     }
@@ -29,7 +29,7 @@ extension UInt: SQLRawStringDecodable {
 extension Int64: SQLRawStringDecodable {
     static func fromSQLValue(string: String) throws -> Int64 {
         guard let val = Int64(string) else {
-            throw QueryError.resultDecodeError(rawSQLValue: string, forType: self)
+            throw MySQLQueryError.resultDecodeError(rawSQLValue: string, forType: self)
         }
         return val
     }
@@ -38,7 +38,7 @@ extension Int64: SQLRawStringDecodable {
 extension Int32: SQLRawStringDecodable {
     static func fromSQLValue(string: String) throws -> Int32 {
         guard let val = Int32(string) else {
-            throw QueryError.resultDecodeError(rawSQLValue: string, forType: self)
+            throw MySQLQueryError.resultDecodeError(rawSQLValue: string, forType: self)
         }
         return val
     }
@@ -47,7 +47,7 @@ extension Int32: SQLRawStringDecodable {
 extension Int16: SQLRawStringDecodable {
     static func fromSQLValue(string: String) throws -> Int16 {
         guard let val = Int16(string) else {
-            throw QueryError.resultDecodeError(rawSQLValue: string, forType: self)
+            throw MySQLQueryError.resultDecodeError(rawSQLValue: string, forType: self)
         }
         return val
     }
@@ -56,7 +56,7 @@ extension Int16: SQLRawStringDecodable {
 extension Int8: SQLRawStringDecodable {
     static func fromSQLValue(string: String) throws -> Int8 {
         guard let val = Int8(string) else {
-            throw QueryError.resultDecodeError(rawSQLValue: string, forType: self)
+            throw MySQLQueryError.resultDecodeError(rawSQLValue: string, forType: self)
         }
         return val
     }
@@ -65,7 +65,7 @@ extension Int8: SQLRawStringDecodable {
 extension UInt64: SQLRawStringDecodable {
     static func fromSQLValue(string: String) throws -> UInt64 {
         guard let val = UInt64(string) else {
-            throw QueryError.resultDecodeError(rawSQLValue: string, forType: self)
+            throw MySQLQueryError.resultDecodeError(rawSQLValue: string, forType: self)
         }
         return val
     }
@@ -74,7 +74,7 @@ extension UInt64: SQLRawStringDecodable {
 extension UInt32: SQLRawStringDecodable {
     static func fromSQLValue(string: String) throws -> UInt32 {
         guard let val = UInt32(string) else {
-            throw QueryError.resultDecodeError(rawSQLValue: string, forType: self)
+            throw MySQLQueryError.resultDecodeError(rawSQLValue: string, forType: self)
         }
         return val
     }
@@ -83,7 +83,7 @@ extension UInt32: SQLRawStringDecodable {
 extension UInt16: SQLRawStringDecodable {
     static func fromSQLValue(string: String) throws -> UInt16 {
         guard let val = UInt16(string) else {
-            throw QueryError.resultDecodeError(rawSQLValue: string, forType: self)
+            throw MySQLQueryError.resultDecodeError(rawSQLValue: string, forType: self)
         }
         return val
     }
@@ -92,7 +92,7 @@ extension UInt16: SQLRawStringDecodable {
 extension UInt8: SQLRawStringDecodable {
     static func fromSQLValue(string: String) throws -> UInt8 {
         guard let val = UInt8(string) else {
-            throw QueryError.resultDecodeError(rawSQLValue: string, forType: self)
+            throw MySQLQueryError.resultDecodeError(rawSQLValue: string, forType: self)
         }
         return val
     }
@@ -101,7 +101,7 @@ extension UInt8: SQLRawStringDecodable {
 extension Float: SQLRawStringDecodable {
     static func fromSQLValue(string: String) throws -> Float {
         guard let val = Float(string) else {
-            throw QueryError.resultDecodeError(rawSQLValue: string, forType: self)
+            throw MySQLQueryError.resultDecodeError(rawSQLValue: string, forType: self)
         }
         return val
     }
@@ -110,7 +110,7 @@ extension Float: SQLRawStringDecodable {
 extension Double: SQLRawStringDecodable {
     static func fromSQLValue(string: String) throws -> Double {
         guard let val = Double(string) else {
-            throw QueryError.resultDecodeError(rawSQLValue: string, forType: self)
+            throw MySQLQueryError.resultDecodeError(rawSQLValue: string, forType: self)
         }
         return val
     }
@@ -125,7 +125,7 @@ extension String: SQLRawStringDecodable {
 extension Bool: SQLRawStringDecodable {
     static func fromSQLValue(string: String) throws -> Bool {
         guard let val = Int(string) else {
-            throw QueryError.resultDecodeError(rawSQLValue: string, forType: self)
+            throw MySQLQueryError.resultDecodeError(rawSQLValue: string, forType: self)
         }
         return Bool(val == 0 ? false : true )
     }
@@ -134,7 +134,7 @@ extension Bool: SQLRawStringDecodable {
 extension Decimal: SQLRawStringDecodable {
     static func fromSQLValue(string: String) throws -> Decimal {
         guard let val = Decimal(string: string) else {
-            throw QueryError.resultDecodeError(rawSQLValue: string, forType: self)
+            throw MySQLQueryError.resultDecodeError(rawSQLValue: string, forType: self)
         }
         return val
     }

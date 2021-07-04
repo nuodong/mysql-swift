@@ -109,16 +109,16 @@ public struct QueryFormatter {
             switch formatted[r] {
             case "??":
                 if placeHolderCount >= parameters.count {
-                    throw QueryFormatError.placeholderCountMismatch(query: query)
+                    throw MySQLQueryFormatError.placeholderCountMismatch(query: query)
                 }
                 guard let escapedVal = parameters[placeHolderCount].escapedForID() else {
-                    throw QueryFormatError.parameterIDTypeError(givenValue: "\(parameters[placeHolderCount])", query: query)
+                    throw MySQLQueryFormatError.parameterIDTypeError(givenValue: "\(parameters[placeHolderCount])", query: query)
                 }
                 formatted.replaceSubrange(r, with: escapedVal)
                 scanRange = r.upperBound..<formatted.endIndex
             case "?":
                 if placeHolderCount >= parameters.count {
-                    throw QueryFormatError.placeholderCountMismatch(query: query)
+                    throw MySQLQueryFormatError.placeholderCountMismatch(query: query)
                 }
                 valArgs.append(parameters[placeHolderCount])
                 scanRange = r.upperBound..<formatted.endIndex
@@ -140,7 +140,7 @@ public struct QueryFormatter {
         while index < formattedChars.count {
             if formattedChars[index] == "?" {
                 if placeHolderCount >= valArgs.count {
-                    throw QueryFormatError.placeholderCountMismatch(query: query)
+                    throw MySQLQueryFormatError.placeholderCountMismatch(query: query)
                 }
                 let val = valArgs[placeHolderCount]
                 formattedChars.remove(at: index)

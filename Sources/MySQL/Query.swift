@@ -85,12 +85,12 @@ extension Connection {
         func string() throws -> String {
             switch self {
             case .null:
-                throw QueryError.resultParseError(message: "the field is not string.", result: "null")
+                throw MySQLQueryError.resultParseError(message: "the field is not string.", result: "null")
             case .date(let string, _):
                 return string
             case .binary(let data):
                 guard let string = String(data: data, encoding: .utf8) else {
-                    throw QueryError.resultParseError(message: "invalid utf8 string bytes.", result: "")
+                    throw MySQLQueryError.resultParseError(message: "invalid utf8 string bytes.", result: "")
                 }
                 return string
             }
@@ -113,7 +113,7 @@ extension Connection {
         }
 //        print("MySQL formattedQuery:\(formattedQuery)")
         guard mysql_real_query(mysql, formattedQuery, UInt(formattedQuery.utf8.count)) == 0 else {
-            throw QueryError.queryExecutionError(message: MySQLUtil.getMySQLError(mysql), query: queryPrefix())
+            throw MySQLQueryError.queryExecutionError(message: MySQLUtil.getMySQLError(mysql), query: queryPrefix())
         }
         let status = QueryStatus(mysql: mysql)
         
@@ -123,7 +123,7 @@ extension Connection {
                 // actual no result
                 return ([], status)
             }
-            throw QueryError.resultFetchError(message: MySQLUtil.getMySQLError(mysql), query: queryPrefix())
+            throw MySQLQueryError.resultFetchError(message: MySQLUtil.getMySQLError(mysql), query: queryPrefix())
         }
         defer {
             mysql_free_result(res)
@@ -131,17 +131,17 @@ extension Connection {
         
         let fieldCount = Int(mysql_num_fields(res))
         guard fieldCount > 0 else {
-            throw QueryError.resultNoFieldError(query: queryPrefix())
+            throw MySQLQueryError.resultNoFieldError(query: queryPrefix())
         }
         
         // fetch field info
         guard let fieldDef = mysql_fetch_fields(res) else {
-            throw QueryError.resultFieldFetchError(query: queryPrefix())
+            throw MySQLQueryError.resultFieldFetchError(query: queryPrefix())
         }
         var fields:[Field] = []
         for i in 0..<fieldCount {
             guard let f = Field(f: fieldDef[i]) else {
-                throw QueryError.resultFieldFetchError(query: queryPrefix())
+                throw MySQLQueryError.resultFieldFetchError(query: queryPrefix())
             }
             fields.append(f)
         }
@@ -156,7 +156,7 @@ extension Connection {
             }
             
             guard let lengths = mysql_fetch_lengths(res) else {
-                throw QueryError.resultRowFetchError(query: queryPrefix())
+                throw MySQLQueryError.resultRowFetchError(query: queryPrefix())
             }
             
             var fieldValues: [FieldValue] = []
@@ -176,7 +176,7 @@ extension Connection {
             }
             rowCount += 1
             if fields.count != fieldValues.count {
-                throw QueryError.resultParseError(message: "invalid fetched column count", result: "")
+                throw MySQLQueryError.resultParseError(message: "invalid fetched column count", result: "")
             }
             
             rows.append(QueryRowResult(fields: fields, fieldValues: fieldValues))
@@ -197,7 +197,7 @@ extension Connection {
         }
         
         guard mysql_real_query(mysql, formattedQuery, UInt(formattedQuery.utf8.count)) == 0 else {
-            throw QueryError.queryExecutionError(message: MySQLUtil.getMySQLError(mysql), query: queryPrefix())
+            throw MySQLQueryError.queryExecutionError(message: MySQLUtil.getMySQLError(mysql), query: queryPrefix())
         }
         let status = QueryStatus(mysql: mysql)
         
@@ -207,7 +207,7 @@ extension Connection {
                 // actual no result
                 return ([], status)
             }
-            throw QueryError.resultFetchError(message: MySQLUtil.getMySQLError(mysql), query: queryPrefix())
+            throw MySQLQueryError.resultFetchError(message: MySQLUtil.getMySQLError(mysql), query: queryPrefix())
         }
         defer {
             mysql_free_result(res)
@@ -215,17 +215,17 @@ extension Connection {
         
         let fieldCount = Int(mysql_num_fields(res))
         guard fieldCount > 0 else {
-            throw QueryError.resultNoFieldError(query: queryPrefix())
+            throw MySQLQueryError.resultNoFieldError(query: queryPrefix())
         }
         
         // fetch field info
         guard let fieldDef = mysql_fetch_fields(res) else {
-            throw QueryError.resultFieldFetchError(query: queryPrefix())
+            throw MySQLQueryError.resultFieldFetchError(query: queryPrefix())
         }
         var fields:[Field] = []
         for i in 0..<fieldCount {
             guard let f = Field(f: fieldDef[i]) else {
-                throw QueryError.resultFieldFetchError(query: queryPrefix())
+                throw MySQLQueryError.resultFieldFetchError(query: queryPrefix())
             }
             fields.append(f)
         }
@@ -239,11 +239,11 @@ extension Connection {
             }
             
             guard let _ = mysql_fetch_lengths(res) else {
-                throw QueryError.resultRowFetchError(query: queryPrefix())
+                throw MySQLQueryError.resultRowFetchError(query: queryPrefix())
             }
             let rowDic = try convertRowValueToDic(row: row, fields: fields, fieldCount: fieldCount)
             if fields.count != rowDic.count {
-                throw QueryError.resultParseError(message: "invalid fetched column count", result: "")
+                throw MySQLQueryError.resultParseError(message: "invalid fetched column count", result: "")
             }
             rows.append(rowDic)
         }
@@ -287,10 +287,10 @@ extension Connection {
                         let jsonObj = try JSONSerialization.jsonObject(with: data, options: .mutableContainers)
                         results[field.name] = jsonObj
                     }else{
-                        throw QueryError.resultParseError(message: "Unsupported mysql type:\(field.type) field:\(field.name)", result: "")
+                        throw MySQLQueryError.resultParseError(message: "Unsupported mysql type:\(field.type) field:\(field.name)", result: "")
                     }
                 default:
-                    throw QueryError.resultParseError(message: "Unsupported mysql type:\(field.type) field:\(field.name)", result: "")
+                    throw MySQLQueryError.resultParseError(message: "Unsupported mysql type:\(field.type) field:\(field.name)", result: "")
                 }
             }
             

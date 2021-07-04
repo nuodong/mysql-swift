@@ -44,21 +44,21 @@ internal struct QueryRowResult {
         do {
             return try T.fromSQLValue(string: obj)
         } catch {
-            throw QueryError.SQLRawStringDecodeError(error: error, actualValue: obj, expectedType: "\(T.self)", forField: field)
+            throw MySQLQueryError.SQLRawStringDecodeError(error: error, actualValue: obj, expectedType: "\(T.self)", forField: field)
         }
     }
     
     private func getValue<T: SQLRawStringDecodable>(fieldValue: Connection.FieldValue, field: String) throws -> T {
         switch fieldValue {
         case .null:
-            throw QueryError.resultCastError(actualValue: "NULL", expectedType: "\(T.self)", forField: field)
+            throw MySQLQueryError.resultCastError(actualValue: "NULL", expectedType: "\(T.self)", forField: field)
         case .date(let string, let timezone):
             if T.self == Date.self {
                 return try Date(sqlDate: string, timeZone: timezone) as! T
             } else if T.self == DateComponents.self {
                 return try DateComponents.fromSQLValue(string: string) as! T
             }
-            throw QueryError.resultCastError(actualValue: "\(string)", expectedType: "\(T.self)", forField: field)
+            throw MySQLQueryError.resultCastError(actualValue: "\(string)", expectedType: "\(T.self)", forField: field)
         case .binary(let data):
             //print("T is \(T.self)")
             if let bin = data as? T {
@@ -70,7 +70,7 @@ internal struct QueryRowResult {
     
     func getValue<T: SQLRawStringDecodable>(forField field: String) throws -> T {
         guard let fieldValue = columnMap[field] else {
-            throw QueryError.missingField(field)
+            throw MySQLQueryError.missingField(field)
         }
         return try getValue(fieldValue: fieldValue, field: field)
     }    
@@ -86,11 +86,11 @@ internal struct QueryRowResultDecoder : Decoder {
     }
     
     public func unkeyedContainer() throws -> UnkeyedDecodingContainer {
-        throw QueryError.resultDecodeErrorMessage(message: "Decoder unkeyedContainer not implemented")
+        throw MySQLQueryError.resultDecodeErrorMessage(message: "Decoder unkeyedContainer not implemented")
     }
     
     public func singleValueContainer() throws -> SingleValueDecodingContainer {
-        throw QueryError.resultDecodeErrorMessage(message: "Decoder singleValueContainer not implemented")
+        throw MySQLQueryError.resultDecodeErrorMessage(message: "Decoder singleValueContainer not implemented")
     }
 }
 
@@ -169,11 +169,11 @@ fileprivate struct SQLStringDecoder: Decoder {
     }
 
     func container<Key>(keyedBy type: Key.Type) throws -> KeyedDecodingContainer<Key> where Key : CodingKey {
-        throw QueryError.resultDecodeErrorMessage(message: "RawTypeDecoder container(keyedBy:) not implemented, you could implement `QueryRowResultCustomData` type:\(type)")
+        throw MySQLQueryError.resultDecodeErrorMessage(message: "RawTypeDecoder container(keyedBy:) not implemented, you could implement `QueryRowResultCustomData` type:\(type)")
     }
     
     func unkeyedContainer() throws -> UnkeyedDecodingContainer {
-        throw QueryError.resultDecodeErrorMessage(message: "RawTypeDecoder unkeyedContainer not implemented")
+        throw MySQLQueryError.resultDecodeErrorMessage(message: "RawTypeDecoder unkeyedContainer not implemented")
     }
     
     func singleValueContainer() throws -> SingleValueDecodingContainer {
@@ -286,18 +286,18 @@ fileprivate struct RowKeyedDecodingContainer<K : CodingKey> : KeyedDecodingConta
     }
     
     func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type, forKey key: K) throws -> KeyedDecodingContainer<NestedKey> {
-        throw QueryError.resultDecodeErrorMessage(message: "KeyedDecodingContainer nestedContainer not implemented")
+        throw MySQLQueryError.resultDecodeErrorMessage(message: "KeyedDecodingContainer nestedContainer not implemented")
     }
     
     func nestedUnkeyedContainer(forKey key: K) throws -> UnkeyedDecodingContainer {
-        throw QueryError.resultDecodeErrorMessage(message: "KeyedDecodingContainer nestedContainer not implemented")
+        throw MySQLQueryError.resultDecodeErrorMessage(message: "KeyedDecodingContainer nestedContainer not implemented")
     }
     
     func superDecoder() throws -> Decoder {
-        throw QueryError.resultDecodeErrorMessage(message: "KeyedDecodingContainer superDecoder not implemented")
+        throw MySQLQueryError.resultDecodeErrorMessage(message: "KeyedDecodingContainer superDecoder not implemented")
     }
     
     func superDecoder(forKey key: K) throws -> Decoder {
-        throw QueryError.resultDecodeErrorMessage(message: "KeyedDecodingContainer superDecoder(forKey) not implemented")
+        throw MySQLQueryError.resultDecodeErrorMessage(message: "KeyedDecodingContainer superDecoder(forKey) not implemented")
     }
 }

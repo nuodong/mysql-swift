@@ -64,7 +64,7 @@ class LoadTests: XCTestCase {
         
         public func queryParameter(option: QueryParameterOption)throws -> QueryParameterType {
             let data = try JSONEncoder().encode(self)
-            guard let string = String(data: data, encoding: .utf8) else { throw QueryFormatError.placeholderCountMismatch(query: "ddddddddd") }
+            guard let string = String(data: data, encoding: .utf8) else { throw MySQLQueryFormatError.placeholderCountMismatch(query: "ddddddddd") }
             return EscapedQueryParameter("'\(string)'")
         }
     }

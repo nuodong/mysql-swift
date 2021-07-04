@@ -8,6 +8,11 @@
 public protocol MySQLError: Error {
     
 }
+extension MySQLError {
+    var localizedDescription: String {
+        return String(describing: self)
+    }
+}
 
 public enum MySQLConnectionError: MySQLError {
     case connectionError(String)
@@ -15,7 +20,7 @@ public enum MySQLConnectionError: MySQLError {
 }
 
 
-public enum QueryError: MySQLError {
+public enum MySQLQueryError: MySQLError {
     
     case queryExecutionError(message: String, query: String)
     case resultFetchError(message: String, query: String)
@@ -33,11 +38,11 @@ public enum QueryError: MySQLError {
     case missingField(String)
 }
 
-public enum QueryParameterError: MySQLError {
+public enum MySQLQueryParameterError: MySQLError {
     case dateComponentsError(String)
 }
 
-public enum QueryFormatError: MySQLError {
+public enum MySQLQueryFormatError: MySQLError {
     case placeholderCountMismatch(query: String)
     case parameterIDTypeError(givenValue: String, query: String)
 }

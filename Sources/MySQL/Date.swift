@@ -52,7 +52,7 @@ extension Date {
             return
         }
         
-        throw QueryError.SQLDateStringError(sqlDate)
+        throw MySQLQueryError.SQLDateStringError(sqlDate)
     }
 }
 
@@ -93,7 +93,7 @@ extension DateComponents: QueryParameter {
         if let year = self.year {
             return EscapedQueryParameter("'\(pad(num: year))'")
         }
-        throw QueryParameterError.dateComponentsError(self.description)
+        throw MySQLQueryParameterError.dateComponentsError(self.description)
     }
 }
 
@@ -178,6 +178,6 @@ extension DateComponents: SQLRawStringDecodable {
                 day: day
             )
         }
-        throw QueryError.SQLDateStringError(string)
+        throw MySQLQueryError.SQLDateStringError(string)
     }
 }
