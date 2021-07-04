@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import SQLFormatter
+@testable 
 
 
 class SQLFormattingTests: XCTestCase {

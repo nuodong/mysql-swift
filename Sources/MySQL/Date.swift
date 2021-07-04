@@ -8,7 +8,6 @@
 
 
 import Foundation
-import SQLFormatter
 
 internal final class SQLDateCalendar {
     

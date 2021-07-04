@@ -8,7 +8,7 @@
 
 import XCTest
 @testable import MySQL
-import SQLFormatter
+
 
 
 final class QueryFormatterTests: XCTestCase {

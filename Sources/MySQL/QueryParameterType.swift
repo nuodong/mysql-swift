@@ -6,7 +6,6 @@
 //  Copyright © 2015 Yusuke Ito. All rights reserved.
 //
 
-import SQLFormatter
 import Foundation
 
 public protocol QueryParameter {

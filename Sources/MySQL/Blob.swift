@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import SQLFormatter
 
 extension Data: SQLRawStringDecodable {
     public static func fromSQLValue(string: String) throws -> Data {

@@ -7,7 +7,6 @@
 //
 
 import CMySQL
-import SQLFormatter
 import Foundation
 
 public struct QueryStatus: CustomStringConvertible {

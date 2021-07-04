@@ -6,8 +6,6 @@
 //  Copyright © 2016 Yusuke Ito. All rights reserved.
 //
 
-import SQLFormatter
-
 public enum AutoincrementID<I: IDType> {
     case noID
     case ID(I)

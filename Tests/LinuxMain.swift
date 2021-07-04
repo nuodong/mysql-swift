@@ -1,7 +1,7 @@
 import XCTest
 
 //import MySQLTests
-//import SQLFormatterTests
+//Tests
 import LoadTests
 var tests = [XCTestCaseEntry]()
 //tests += MySQLTests.__allTests()

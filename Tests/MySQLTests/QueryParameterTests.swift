@@ -8,7 +8,7 @@
 
 import XCTest
 import MySQL
-import SQLFormatter
+
 
 // the URL as QueryParameter should be
 extension URL: QueryParameter {

@@ -6,7 +6,7 @@
 //  Copyright © 2016 Yusuke Ito. All rights reserved.
 //
 
-import SQLFormatter
+
 import Foundation
 
 

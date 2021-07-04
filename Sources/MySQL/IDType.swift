@@ -6,7 +6,6 @@
 //  Copyright © 2016 Yusuke Ito. All rights reserved.
 //
 
-import SQLFormatter
 
 public protocol IDType: QueryParameter, Hashable, Codable {
     associatedtype T: QueryParameter, Hashable, Codable
