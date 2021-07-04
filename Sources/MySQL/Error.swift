@@ -8,17 +8,11 @@
 public protocol MySQLError: Error {
     
 }
-extension MySQLError {
-    var localizedDescription: String {
-        return String(describing: self)
-    }
-}
 
 public enum MySQLConnectionError: MySQLError {
     case connectionError(String)
     case connectionPoolGetConnectionTimeoutError
 }
-
 
 public enum MySQLQueryError: MySQLError {
     
