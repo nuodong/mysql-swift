@@ -12,14 +12,11 @@ let package = Package(
             path: "Sources/cmysql",
             pkgConfig: "mysqlclient"
         ),
-        .target(
-            name: "SQLFormatter"
-        ),
+
         .target(
             name: "MySQL",
             dependencies: [
                 "CMySQL",
-                "SQLFormatter",
             ]
         ),
 //        .testTarget(

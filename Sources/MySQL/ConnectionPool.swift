@@ -159,7 +159,7 @@ final public class ConnectionPool: CustomStringConvertible {
         }
         
         guard let conn = connection else {
-            throw ConnectionError.connectionPoolGetConnectionTimeoutError
+            throw MySQLConnectionError.connectionPoolGetConnectionTimeoutError
         }
         return conn
     }

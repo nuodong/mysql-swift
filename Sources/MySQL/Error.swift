@@ -5,8 +5,17 @@
 //  Created by Yusuke Ito on 12/14/15.
 //  Copyright © 2015 Yusuke Ito. All rights reserved.
 //
+public protocol MySQLError: Error {
+    
+}
 
-public enum QueryError: Error {
+public enum MySQLConnectionError: MySQLError {
+    case connectionError(String)
+    case connectionPoolGetConnectionTimeoutError
+}
+
+
+public enum QueryError: MySQLError {
     
     case queryExecutionError(message: String, query: String)
     case resultFetchError(message: String, query: String)
@@ -24,6 +33,11 @@ public enum QueryError: Error {
     case missingField(String)
 }
 
-public enum QueryParameterError: Error {
+public enum QueryParameterError: MySQLError {
     case dateComponentsError(String)
+}
+
+public enum QueryFormatError: MySQLError {
+    case placeholderCountMismatch(query: String)
+    case parameterIDTypeError(givenValue: String, query: String)
 }

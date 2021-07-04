@@ -65,10 +65,6 @@ extension Connection {
     
 }
 
-public enum ConnectionError: Error {
-    case connectionError(String)
-    case connectionPoolGetConnectionTimeoutError
-}
 
 public final class Connection {
     
@@ -124,7 +120,7 @@ public final class Connection {
             option.database,
             UInt32(option.port), nil, 0) == nil {
             // error
-                throw ConnectionError.connectionError(MySQLUtil.getMySQLError(mysql))
+                throw MySQLConnectionError.connectionError(MySQLUtil.getMySQLError(mysql))
         }
         mysql_set_character_set(mysql, option.encoding.rawValue)
         self.mysql_ = mysql
