@@ -82,11 +82,13 @@ includedir=${prefix}/include
  
 ```
 
-## Ubuntu
-
+## Ubuntu 18.04
 * Install `libmysqlclient-dev`
 
 ```sh
+$ wget https://dev.mysql.com/get/mysql-apt-config_0.8.17-1_all.deb
+$ dpkg -i mysql-apt-config_0.8.17-1_all.deb
+$ apt update
 $ sudo apt-get install libmysqlclient-dev
 ```
 
