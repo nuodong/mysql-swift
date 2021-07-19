@@ -112,7 +112,7 @@ extension Connection {
         }
 //        print("MySQL formattedQuery:\(formattedQuery)")
         guard mysql_real_query(mysql, formattedQuery, UInt(formattedQuery.utf8.count)) == 0 else {
-            throw MySQLQueryError.queryExecutionError(message: "error:\(MySQLUtil.getMySQLError(mysql))\nformattedQuery:\(formattedQuery)", query: queryPrefix())
+            throw MySQLQueryError.queryExecutionError(message: "error:\(MySQLUtil.getMySQLError(mysql))\n formattedQuery:\(formattedQuery)", query: queryPrefix())
         }
         let status = QueryStatus(mysql: mysql)
         
