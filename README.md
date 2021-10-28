@@ -70,6 +70,15 @@ try conn.query("UPDATE ?? SET age = ? WHERE age is NULL;", [tableName, defaultAg
 
 Install libmysqlclient and copy pkg-config `.pc` file to /usr/local/lib/pkgconfig/
 
+* Method 1 (Recommended)
+````
+Install mysql8.x with the dmg file from mysql site: https://dev.mysql.com/downloads/mysql/
+sudo mkdir -p /usr/local/lib/pkgconfig/ 
+sudo cp /usr/local/mysql/lib/pkgconfig/mysqlclient.pc /usr/local/lib/pkgconfig/
+
+````
+
+* Method 2 (Not used any more. if use it, change shim.h file include 'mysql.h' to 'mysql/mysql.h')
 ```sh
 $ brew install mysql-connector-c
 # copy  mysqlclient.pc
