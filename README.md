@@ -76,6 +76,9 @@ Install mysql8.x with the dmg file from mysql site: https://dev.mysql.com/downlo
 sudo mkdir -p /usr/local/lib/pkgconfig/ 
 sudo cp /usr/local/mysql/lib/pkgconfig/mysqlclient.pc /usr/local/lib/pkgconfig/
 
+# if xcode can not find the dylb file, add following link
+ sudo ln -s /usr/local/mysql/lib/libmysqlclient.21.dylib /usr/local/lib/libmysqlclient.21.dylib
+
 ````
 
 * Method 2 (Not used any more. if use it, change shim.h file include 'mysql.h' to 'mysql/mysql.h')
