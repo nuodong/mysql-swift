@@ -11,6 +11,8 @@ import Dispatch
     import Glibc
 #endif
 import CMySQL
+import Foundation
+
 
 fileprivate var LibraryInitialized: Atomic<Bool> = Atomic(false)
 
@@ -189,4 +191,14 @@ extension ConnectionPool {
         return try block(conn)
     }
     
+    public func asyncExecute<T>( _ block : @escaping (_ conn: Connection) throws -> T  ) async throws -> T {
+        let t = Task { () -> T in
+            let conn = try getConnection()
+            let result = try block(conn)
+            releaseConnection(conn)
+            return result
+        }
+        
+        return try await t.result.get()
+    }
 }

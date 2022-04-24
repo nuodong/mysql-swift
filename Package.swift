@@ -1,8 +1,11 @@
-// swift-tools-version:5.0
+// swift-tools-version:5.5
 import PackageDescription
 
 let package = Package(
     name: "mysql-swift",
+    platforms: [
+           .macOS(.v12)
+        ],
     products: [
         .library(name: "MySQL", targets: ["MySQL"])
     ],
