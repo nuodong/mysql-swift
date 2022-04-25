@@ -192,11 +192,8 @@ extension ConnectionPool {
     }
     
     public func asyncExecute<T>( _ block : @escaping (_ conn: Connection) throws -> T  ) async throws -> T {
-        let t = Task { () -> T in
-            let conn = try getConnection()
-            let result = try block(conn)
-            releaseConnection(conn)
-            return result
+        let t = Task { () throws -> T in
+            return try self.execute(block)
         }
         
         return try await t.result.get()

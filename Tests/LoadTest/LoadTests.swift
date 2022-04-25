@@ -23,8 +23,8 @@ class LoadTests: XCTestCase {
     }
     var pool = ConnectionPool(option: Option())
     
-    func testQueryJsonObject() throws {
-        let countRows: [[String : Any?]] = try self.pool.execute({ conn in
+    func testQueryJsonObject() async throws {
+        let countRows: [[String : Any?]] = try await self.pool.asyncExecute({ conn in
             let sql = "SELECT count(*) as count_id FROM TableChangeTag WHERE team_id = ? and id > ? and recordType = ?"
             return try conn.queryJsonObjects(query: sql, params: [89754, 0, "BarcodeDataTable"])
         })
@@ -69,8 +69,8 @@ class LoadTests: XCTestCase {
         }
     }
 
-    func testQueryModel() throws {
-        let devices: [NUDevice] = try self.pool.execute({ conn in
+    func testQueryModel() async throws {
+        let devices: [NUDevice] = try await self.pool.asyncExecute({ conn in
             let sql = "select *from device limit 1"
             return try conn.query(sql)
         })
